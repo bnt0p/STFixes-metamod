@@ -25,6 +25,7 @@
 #include "module.h"
 #include "addresses.h"
 #include "detours.h"
+#include "entities.h"
 #include "entity/ccsplayercontroller.h"
 #include "entity/ccsplayerpawn.h"
 #include "entity/cbasemodelentity.h"

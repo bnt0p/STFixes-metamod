@@ -23,6 +23,7 @@
 
 class CGameConfig;
 class CTriggerPush;
+class CBaseEntity;
 
 bool InitDetours(CGameConfig *gameConfig);
 void FlushAllDetours();

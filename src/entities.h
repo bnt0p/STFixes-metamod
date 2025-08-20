@@ -20,7 +20,6 @@
 #pragma once
 
 class CBaseEntity;
-class Z_CBaseEntity;
 class CCSPlayerPawn;
 class CEntityKeyValues;
 
