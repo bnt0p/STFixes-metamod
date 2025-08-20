@@ -72,7 +72,7 @@ namespace CTriggerGravityHandler
 		return true;
 	}
 
-	void OnEndTouch(CBaseEntity* pEntity, Z_CBaseEntity* pOther)
+	void OnEndTouch(CBaseEntity* pEntity, CBaseEntity* pOther)
 	{
 		if (pOther->IsPawn())
 			pOther->SetGravityScale(1);

@@ -20,14 +20,15 @@
 #pragma once
 
 class CBaseEntity;
+class Z_CBaseEntity;
 class CCSPlayerPawn;
 class CEntityKeyValues;
 
 namespace CTriggerGravityHandler
 {
 	void OnPrecache(CBaseEntity* pEntity, const CEntityKeyValues* kv);
-	bool GravityTouching(CBaseEntity* pEntity, Z_CBaseEntity* pOther);
-	void OnEndTouch(CBaseEntity* pEntity, Z_CBaseEntity* pOther);
+	bool GravityTouching(CBaseEntity* pEntity, CBaseEntity* pOther);
+	void OnEndTouch(CBaseEntity* pEntity, CBaseEntity* pOther);
 } // namespace CTriggerGravityHandler
 
 void EntityHandler_OnLevelInit();

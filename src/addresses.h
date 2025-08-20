@@ -45,7 +45,7 @@ class CBasePlayerController;
 class CCSPlayerController;
 class CCSPlayerPawn;
 class CBaseModelEntity;
-class Z_CBaseEntity;
+class CBaseEntity;
 class CGameConfig;
 class CEntitySystem;
 class IEntityFindFilter;
@@ -61,8 +61,8 @@ namespace addresses
 {
 	bool Initialize(CGameConfig *g_GameConfig);
 
-	inline void(FASTCALL* SetGroundEntity)(Z_CBaseEntity* ent, CBaseEntity* ground, CBaseEntity* unk3);
-	inline void(FASTCALL* SetGravityScale)(Z_CBaseEntity*, float);
+	inline void(FASTCALL* SetGroundEntity)(CBaseEntity* ent, CBaseEntity* ground, CBaseEntity* unk3);
+	inline void(FASTCALL* SetGravityScale)(CBaseEntity*, float);
 	inline void(FASTCALL* CBasePlayerController_SetPawn)(CBasePlayerController* pController, CCSPlayerPawn* pPawn, bool a3, bool a4, bool a5, bool a6);
 	inline void(FASTCALL* NetworkStateChanged)(void* chainEntity, CNetworkStateChangedInfo& info);
 }

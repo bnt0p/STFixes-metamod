@@ -287,7 +287,7 @@ void CS2Fixes::Hook_CTriggerGravityPrecache(CEntityPrecacheContext* param)
 	RETURN_META(MRES_IGNORED);
 }
 
-void CS2Fixes::Hook_CTriggerGravityEndTouch(Z_CBaseEntity* pOther)
+void CS2Fixes::Hook_CTriggerGravityEndTouch(CBaseEntity* pOther)
 {
 	CTriggerGravityHandler::OnEndTouch(META_IFACEPTR(CBaseEntity), pOther);
 	RETURN_META(MRES_IGNORED);

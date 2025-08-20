@@ -27,4 +27,5 @@ class CTriggerPush;
 bool InitDetours(CGameConfig *gameConfig);
 void FlushAllDetours();
 
-void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOther);
+void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, CBaseEntity* pOther);
+void FASTCALL Detour_CTriggerGravity_GravityTouch(CBaseEntity* pEntity, CBaseEntity* pOther);
