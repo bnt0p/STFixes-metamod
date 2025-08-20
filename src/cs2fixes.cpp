@@ -144,6 +144,9 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 	if (!addresses::Initialize(g_GameConfig))
 		bRequiredInitLoaded = false;
 
+	if (!InitPatches(g_GameConfig))
+		bRequiredInitLoaded = false;
+
 	if (!InitDetours(g_GameConfig))
 		bRequiredInitLoaded = false;
 
@@ -253,7 +256,7 @@ const char *CS2Fixes::GetLicense()
 const char *CS2Fixes::GetVersion()
 {
 #ifndef CS2FIXES_VERSION
-#define CS2FIXES_VERSION "1.9-dev"
+#define CS2FIXES_VERSION "1.0-dev"
 #endif
 
 	return CS2FIXES_VERSION; // defined by the build script
@@ -266,25 +269,25 @@ const char *CS2Fixes::GetDate()
 
 const char *CS2Fixes::GetLogTag()
 {
-	return "Rampbugfix";
+	return "STFixes-metamod";
 }
 
 const char *CS2Fixes::GetAuthor()
 {
-	return "xen, Poggu, and the Source2ZE community (reduced by interesting with rampfix by zer0, maintained by rcnoob)";
+	return "xen, Poggu, and the Source2ZE community (reduced by interesting with misc fixes reimplemented by rcnoob)";
 }
 
 const char *CS2Fixes::GetDescription()
 {
-	return "Minimizes rampbugs.";
+	return "CS2Fixes culled down with misc surf fixes remaining";
 }
 
 const char *CS2Fixes::GetName()
 {
-	return "Rampbugfix";
+	return "STFixes-metamod";
 }
 
 const char *CS2Fixes::GetURL()
 {
-	return "https://github.com/Interesting-exe/CS2Fixes-RampbugFix";
+	return "https://github.com/SharpTimer/STFixes-metamod";
 }

@@ -22,13 +22,9 @@
 
 
 class CGameConfig;
-class CCSPlayer_MovementServices;
-class CMoveData;
-class CCSPlayer_MovementServices;
+class CTriggerPush;
 
 bool InitDetours(CGameConfig *gameConfig);
 void FlushAllDetours();
 
-void FASTCALL Detour_ProcessMovement(CCSPlayer_MovementServices *pThis, void *pMove);
-void FASTCALL Detour_TryPlayerMove(CCSPlayer_MovementServices *ms, CMoveData *mv, Vector *pFirstDest, trace_t *pFirstTrace, bool *bIsSurfing);
-void FASTCALL Detour_CategorizePosition(CCSPlayer_MovementServices *ms, CMoveData *mv, bool bStayOnGround);
+void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOther);
