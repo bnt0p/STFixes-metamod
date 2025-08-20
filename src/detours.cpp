@@ -42,7 +42,7 @@
 
 #include "tier0/memdbgon.h"
 
-extern CGlobalVars *gpGlobals;
+extern CGlobalVars* GetGlobals();
 extern CGameEntitySystem *g_pEntitySystem;
 extern CCSGameRules *g_pGameRules;
 
@@ -54,7 +54,7 @@ DECLARE_DETOUR(TriggerPush_Touch, Detour_TriggerPush_Touch);
 #define i32 int32_t
 #define u32 uint32_t
 
-void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, CBaseEntity* pOther)
+void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOther)
 {
 	// This trigger pushes only once (and kills itself) or pushes only on StartTouch, both of which are fine already
 	if (!g_cvarUseOldPush.Get() || pPush->m_spawnflags() & SF_TRIG_PUSH_ONCE || pPush->m_bTriggerOnStartTouch())
