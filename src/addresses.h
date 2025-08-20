@@ -62,4 +62,5 @@ namespace addresses
 	bool Initialize(CGameConfig *g_GameConfig);
 
 	inline void(FASTCALL* SetGroundEntity)(Z_CBaseEntity* ent, CBaseEntity* ground, CBaseEntity* unk3);
+	inline void(FASTCALL* CBasePlayerController_SetPawn)(CBasePlayerController* pController, CCSPlayerPawn* pPawn, bool a3, bool a4, bool a5, bool a6);
 }

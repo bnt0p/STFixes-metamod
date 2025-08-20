@@ -51,6 +51,7 @@ bool addresses::Initialize(CGameConfig *g_GameConfig)
 #endif
 
 	RESOLVE_SIG(g_GameConfig, "SetGroundEntity", addresses::SetGroundEntity);
+	RESOLVE_SIG(g_GameConfig, "CBasePlayerController_SetPawn", addresses::CBasePlayerController_SetPawn);
 	
 	return true;
 }
