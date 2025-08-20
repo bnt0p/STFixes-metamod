@@ -49,6 +49,7 @@ extern CCSGameRules *g_pGameRules;
 CUtlVector<CDetourBase *> g_vecDetours;
 
 DECLARE_DETOUR(TriggerPush_Touch, Detour_TriggerPush_Touch);
+DECLARE_DETOUR(CTriggerGravity_GravityTouch, Detour_CTriggerGravity_GravityTouch);
 
 #define f32 float32
 #define i32 int32_t
@@ -130,6 +131,18 @@ void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOthe
 	flags |= (1 << 23); // TODO: is FL_BASEVELOCITY really gone?
 	pOther->m_fFlags(flags);
 }
+
+void FASTCALL Detour_CTriggerGravity_GravityTouch(CBaseEntity* pEntity, Z_CBaseEntity* pOther)
+{
+	// no need to call original function here
+	// because original function calls CBaseEntity::SetGravityScale internal
+	// but passes the wrong gravity scale value
+	if (CTriggerGravityHandler::GravityTouching(pEntity, pOther))
+		return;
+
+	CTriggerGravity_GravityTouch(pEntity, pOther);
+}
+
 bool InitDetours(CGameConfig *gameConfig)
 {
 	bool success = true;

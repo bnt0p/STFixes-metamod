@@ -173,6 +173,11 @@ public:
 		addresses::SetGroundEntity(this, pGround, nullptr);
 	}
 
+	void SetGravityScale(float flGravityScale)
+	{
+		addresses::SetGravityScale(this, flGravityScale);
+	}
+
 	bool IsPawn()
 	{
 		static int offset = g_GameConfig->GetOffset("IsEntityPawn");

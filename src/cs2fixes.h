@@ -34,7 +34,8 @@ public:
 public: //hooks
 	void Hook_ClientActive( CPlayerSlot slot, bool bLoadGame, const char *pszName, uint64 xuid );
 	void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession *pSession, const char *pszMapName);
-	
+	void Hook_CTriggerGravityPrecache(CEntityPrecacheContext* param);
+	void Hook_CTriggerGravityEndTouch(CBaseEntity* pOther);
 
 public:
 	const char *GetAuthor();

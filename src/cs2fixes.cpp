@@ -77,6 +77,9 @@ class GameSessionConfiguration_t { };
 
 SH_DECL_HOOK4_void(IServerGameClients, ClientActive, SH_NOATTRIB, 0, CPlayerSlot, bool, const char *, uint64);
 SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
+SH_DECL_MANUALHOOK1_void(CGamePlayerEquipPrecache, 0, 0, 0, CEntityPrecacheContext*);
+SH_DECL_MANUALHOOK1_void(CTriggerGravityPrecache, 0, 0, 0, CEntityPrecacheContext*);
+SH_DECL_MANUALHOOK1_void(CTriggerGravityEndTouch, 0, 0, 0, CBaseEntity*);
 
 CS2Fixes g_CS2Fixes;
 
@@ -89,6 +92,8 @@ IVEngineServer2 *g_pEngineServer2 = nullptr;
 CGameConfig *g_GameConfig = nullptr;
 CCSGameRules *g_pGameRules = nullptr;
 int g_iCGamePlayerEquipUseId = -1;
+int g_iCTriggerGravityPrecacheId = -1;
+int g_iCTriggerGravityEndTouchId = -1;
 
 CGameEntitySystem *GameEntitySystem()
 {
@@ -168,6 +173,31 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 		return false;
 	}
 
+	const auto pTriggerGravityVTable = modules::server->FindVirtualTable("CTriggerGravity");
+	if (!pTriggerGravityVTable)
+	{
+		snprintf(error, maxlen, "Failed to find TriggerGravity vtable\n");
+		bRequiredInitLoaded = false;
+	}
+
+	offset = g_GameConfig->GetOffset("CBaseEntity::Precache");
+	if (offset == -1)
+	{
+		snprintf(error, maxlen, "Failed to find CBaseEntity::Precache\n");
+		bRequiredInitLoaded = false;
+	}
+	SH_MANUALHOOK_RECONFIGURE(CTriggerGravityPrecache, offset, 0, 0);
+	g_iCTriggerGravityPrecacheId = SH_ADD_MANUALDVPHOOK(CTriggerGravityPrecache, pTriggerGravityVTable, SH_MEMBER(this, &CS2Fixes::Hook_CTriggerGravityPrecache), true);
+
+	offset = g_GameConfig->GetOffset("CBaseEntity::EndTouch");
+	if (offset == -1)
+	{
+		snprintf(error, maxlen, "Failed to find CBaseEntity::EndTouch\n");
+		bRequiredInitLoaded = false;
+	}
+	SH_MANUALHOOK_RECONFIGURE(CTriggerGravityEndTouch, offset, 0, 0);
+	g_iCTriggerGravityEndTouchId = SH_ADD_MANUALDVPHOOK(CTriggerGravityEndTouch, pTriggerGravityVTable, SH_MEMBER(this, &CS2Fixes::Hook_CTriggerGravityEndTouch), true);
+
 	Message( "All hooks started!\n" );
 
 	if (late)
@@ -188,6 +218,8 @@ bool CS2Fixes::Unload(char *error, size_t maxlen)
 {
 	SH_REMOVE_HOOK(IServerGameClients, ClientActive, g_pSource2GameClients, SH_MEMBER(this, &CS2Fixes::Hook_ClientActive), true);
 	SH_REMOVE_HOOK(INetworkServerService, StartupServer, g_pNetworkServerService, SH_MEMBER(this, &CS2Fixes::Hook_StartupServer), true);
+	SH_REMOVE_HOOK_ID(g_iCTriggerGravityPrecacheId);
+	SH_REMOVE_HOOK_ID(g_iCTriggerGravityEndTouchId);
 
 	FlushAllDetours();
 
@@ -242,6 +274,20 @@ void CS2Fixes::Hook_StartupServer(const GameSessionConfiguration_t& config, ISou
 	g_pNetworkGameServer = g_pNetworkServerService->GetIGameServer();
 	g_pEntitySystem = GameEntitySystem();
 	gpGlobals = g_pEngineServer2->GetServerGlobals();
+}
+
+void CS2Fixes::Hook_CTriggerGravityPrecache(CEntityPrecacheContext* param)
+{
+	const auto kv = param->m_pKeyValues;
+	CTriggerGravityHandler::OnPrecache(META_IFACEPTR(CBaseEntity), kv);
+	RETURN_META(MRES_IGNORED);
+}
+
+
+void CS2Fixes::Hook_CTriggerGravityEndTouch(CBaseEntity* pOther)
+{
+	CTriggerGravityHandler::OnEndTouch(META_IFACEPTR(CBaseEntity), pOther);
+	RETURN_META(MRES_IGNORED);
 }
 
 bool CS2Fixes::Pause(char *error, size_t maxlen)
