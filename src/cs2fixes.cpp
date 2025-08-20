@@ -23,6 +23,7 @@
 #include "appframework/IAppSystem.h"
 #include "common.h"
 #include "detours.h"
+#include "entities.h"
 #include "icvar.h"
 #include "interface.h"
 #include "tier0/dbg.h"
@@ -180,7 +181,7 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 		bRequiredInitLoaded = false;
 	}
 
-	offset = g_GameConfig->GetOffset("CBaseEntity::Precache");
+	int offset = g_GameConfig->GetOffset("CBaseEntity::Precache");
 	if (offset == -1)
 	{
 		snprintf(error, maxlen, "Failed to find CBaseEntity::Precache\n");
@@ -283,8 +284,7 @@ void CS2Fixes::Hook_CTriggerGravityPrecache(CEntityPrecacheContext* param)
 	RETURN_META(MRES_IGNORED);
 }
 
-
-void CS2Fixes::Hook_CTriggerGravityEndTouch(CBaseEntity* pOther)
+void CS2Fixes::Hook_CTriggerGravityEndTouch(Z_CBaseEntity* pOther)
 {
 	CTriggerGravityHandler::OnEndTouch(META_IFACEPTR(CBaseEntity), pOther);
 	RETURN_META(MRES_IGNORED);
