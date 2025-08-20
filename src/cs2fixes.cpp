@@ -27,6 +27,7 @@
 #include "interface.h"
 #include "tier0/dbg.h"
 #include "schemasystem/schemasystem.h"
+#include "patches.h"
 #include "plat.h"
 #include "entitysystem.h"
 #include "engine/igameeventsystem.h"
