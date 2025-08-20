@@ -36,6 +36,12 @@ public: //hooks
 	void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession *pSession, const char *pszMapName);
 	void Hook_CTriggerGravityPrecache(CEntityPrecacheContext* param);
 	void Hook_CTriggerGravityEndTouch(CBaseEntity* pOther);
+	void OnLevelInit(char const* pMapName,
+					 char const* pMapEntities,
+					 char const* pOldLevel,
+					 char const* pLandmarkName,
+					 bool loadGame,
+					 bool background);
 
 public:
 	const char *GetAuthor();

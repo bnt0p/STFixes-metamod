@@ -210,6 +210,9 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 
 	g_playerManager = new CPlayerManager(late);
 
+	// run our cfg
+	g_pEngineServer2->ServerCommand("exec cs2fixes/cs2fixes");
+
 	srand(time(0));
 
 	return true;
@@ -288,6 +291,24 @@ void CS2Fixes::Hook_CTriggerGravityEndTouch(Z_CBaseEntity* pOther)
 {
 	CTriggerGravityHandler::OnEndTouch(META_IFACEPTR(CBaseEntity), pOther);
 	RETURN_META(MRES_IGNORED);
+}
+
+void CS2Fixes::OnLevelInit(char const* pMapName,
+						   char const* pMapEntities,
+						   char const* pOldLevel,
+						   char const* pLandmarkName,
+						   bool loadGame,
+						   bool background)
+{
+	Message("OnLevelInit(%s)\n", pMapName);
+
+	// run our cfg
+	g_pEngineServer2->ServerCommand("exec cs2fixes/cs2fixes");
+
+	// Run map cfg (if present)
+	char cmd[MAX_PATH];
+	V_snprintf(cmd, sizeof(cmd), "exec cs2fixes/maps/%s", pMapName);
+	g_pEngineServer2->ServerCommand(cmd);
 }
 
 bool CS2Fixes::Pause(char *error, size_t maxlen)
