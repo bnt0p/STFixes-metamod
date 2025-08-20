@@ -211,7 +211,7 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 	g_playerManager = new CPlayerManager(late);
 
 	// run our cfg
-	g_pEngineServer2->ServerCommand("exec cs2fixes/cs2fixes");
+	g_pEngineServer2->ServerCommand("exec stfixes-metamod/cs2fixes");
 
 	srand(time(0));
 
@@ -303,11 +303,11 @@ void CS2Fixes::OnLevelInit(char const* pMapName,
 	Message("OnLevelInit(%s)\n", pMapName);
 
 	// run our cfg
-	g_pEngineServer2->ServerCommand("exec cs2fixes/cs2fixes");
+	g_pEngineServer2->ServerCommand("exec stfixes-metamod/cs2fixes");
 
 	// Run map cfg (if present)
 	char cmd[MAX_PATH];
-	V_snprintf(cmd, sizeof(cmd), "exec cs2fixes/maps/%s", pMapName);
+	V_snprintf(cmd, sizeof(cmd), "exec stfixes-metamod/maps/%s", pMapName);
 	g_pEngineServer2->ServerCommand(cmd);
 }
 
