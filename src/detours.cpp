@@ -54,18 +54,10 @@ DECLARE_DETOUR(TriggerPush_Touch, Detour_TriggerPush_Touch);
 #define i32 int32_t
 #define u32 uint32_t
 
-void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOther)
+void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, CBaseEntity* pOther)
 {
-	// Fitting both handles into a single uint64
-	uint64 iPushID = ((uint64)pPush->GetHandle().ToInt() << 32) + pOther->GetHandle().ToInt();
-
-	// We're inserting the push ID into a set and if that fails it means this trigger already pushed the other ent in this tick
-	// The set is cleared on the next tick
-	if (g_bPreventMultiPush && !g_PushEntSet.insert(iPushID).second)
-		return;
-
 	// This trigger pushes only once (and kills itself) or pushes only on StartTouch, both of which are fine already
-	if (!g_bUseOldPush || pPush->m_spawnflags() & SF_TRIG_PUSH_ONCE || pPush->m_bTriggerOnStartTouch())
+	if (!g_cvarUseOldPush.Get() || pPush->m_spawnflags() & SF_TRIG_PUSH_ONCE || pPush->m_bTriggerOnStartTouch())
 	{
 		TriggerPush_Touch(pPush, pOther);
 		return;
@@ -103,10 +95,8 @@ void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOthe
 
 	uint32 flags = pOther->m_fFlags();
 
-	if (flags & (FL_BASEVELOCITY))
-	{
+	if (flags & (1 << 23)) // TODO: is FL_BASEVELOCITY really gone?
 		vecPush = vecPush + pOther->m_vecBaseVelocity();
-	}
 
 	if (vecPush.z > 0 && (flags & FL_ONGROUND))
 	{
@@ -117,25 +107,26 @@ void FASTCALL Detour_TriggerPush_Touch(CTriggerPush* pPush, Z_CBaseEntity* pOthe
 		pOther->Teleport(&origin, nullptr, nullptr);
 	}
 
-	if (g_bLogPushes)
+	if (g_cvarLogPushes.Get() && GetGlobals())
 	{
 		Vector vecEntBaseVelocity = pOther->m_vecBaseVelocity;
 		Vector vecOrigPush = vecAbsDir * pPush->m_flSpeed();
 
-		Message("Pushing entity %i | frametime = %.3f | entity basevelocity = %.2f %.2f %.2f | original push velocity = %.2f %.2f %.2f | final push velocity = %.2f %.2f %.2f\n",
-			pOther->GetEntityIndex(),
-			gpGlobals->frametime,
-			vecEntBaseVelocity.x, vecEntBaseVelocity.y, vecEntBaseVelocity.z,
-			vecOrigPush.x, vecOrigPush.y, vecOrigPush.z,
-			vecPush.x, vecPush.y, vecPush.z);
+		Message("Pushing entity %i | frame = %i | tick = %i | entity basevelocity %s = %.2f %.2f %.2f | original push velocity = %.2f %.2f %.2f | final push velocity = %.2f %.2f %.2f\n",
+				pOther->GetEntityIndex(),
+				GetGlobals()->framecount,
+				GetGlobals()->tickcount,
+				(flags & (1 << 23)) ? "WITH FLAG" : "",
+				vecEntBaseVelocity.x, vecEntBaseVelocity.y, vecEntBaseVelocity.z,
+				vecOrigPush.x, vecOrigPush.y, vecOrigPush.z,
+				vecPush.x, vecPush.y, vecPush.z);
 	}
 
 	pOther->m_vecBaseVelocity(vecPush);
 
-	flags |= (FL_BASEVELOCITY);
+	flags |= (1 << 23); // TODO: is FL_BASEVELOCITY really gone?
 	pOther->m_fFlags(flags);
 }
-
 bool InitDetours(CGameConfig *gameConfig)
 {
 	bool success = true;
