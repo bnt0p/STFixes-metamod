@@ -201,6 +201,8 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 
 	Message( "All hooks started!\n" );
 
+	ConVar_Register();
+
 	if (late)
 	{
 		g_pEntitySystem = GameEntitySystem();
@@ -224,6 +226,8 @@ bool CS2Fixes::Unload(char *error, size_t maxlen)
 	SH_REMOVE_HOOK(INetworkServerService, StartupServer, g_pNetworkServerService, SH_MEMBER(this, &CS2Fixes::Hook_StartupServer), true);
 	SH_REMOVE_HOOK_ID(g_iCTriggerGravityPrecacheId);
 	SH_REMOVE_HOOK_ID(g_iCTriggerGravityEndTouchId);
+
+	ConVar_Unregister();
 
 	FlushAllDetours();
 
