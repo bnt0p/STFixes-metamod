@@ -4,13 +4,6 @@
 	{
 		"Signatures"
 		{
-			// String: "Noise removal", there should be 3 customermachine checks
-			"HammerNoCustomerMachine"
-			{
-				"library"		"hammer"
-				"windows"		"\xFF\x15\x2A\x2A\x2A\x2A\x84\xC0\x0F\x85\x2A\x2A\x2A\x2A\xB9"
-				"linux"			""
-			}
 			// String: "CCSPlayerPawnBase::SwitchTeam", just keep in mind this is actually CCSPlayerController::SwitchTeam
 			"CCSPlayerController_SwitchTeam"
 			{
