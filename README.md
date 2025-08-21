@@ -9,6 +9,7 @@ A stripped down build of CS2Fixes with only surf/bhop related fixes (movement un
 
 ## Configuration
 ```cs2f_movement_unlocker_enable	0``` - keep this 0 if you are using ServerMovementUnlocker standalone, if not, set to 1
+
 ```cs2f_use_old_push 				    0``` - set this to 1 for maps with broken trigger_push
 
 ## Compilation
