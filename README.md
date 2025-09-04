@@ -1,13 +1,16 @@
-# RampbugFix
-Minimizes rampbugs. This plugin isn't perfect and rampbugs will continue to occur until Valve decides to finally fix them.
-
-Fix taken from [CS2KZ's rampbug fix](https://gist.github.com/zer0k-z/2eb0c230c8f2c62b5c46d36353cf8d8d)
+# STFixes-metamod
+A stripped down build of CS2Fixes with only surf/bhop related fixes (movement unlocker, botnavignore, water floor jump fix, trigger_push fix, trigger_gravity fix)
 
 ## Installation
 
 - Install [Metamod](https://cs2.poggu.me/metamod/installation/)
-- Build the plugin using the [compilation instructions below](https://github.com/Interesting-exe/CS2Fixes-RampbugFix/tree/main?tab=readme-ov-file#instructions) or download the [latest release](https://github.com/Interesting-exe/CS2Fixes-RampbugFix/releases/latest)
+- Build the plugin using the [compilation instructions below](https://github.com/SharpTimer/STFixes-metamod/tree/main?tab=readme-ov-file#instructions) or download the [latest release](https://github.com/SharpTimer/STFixes-metamod/releases/latest)
 - Extract the package contents into `game/csgo` on your server
+
+## Configuration
+```cs2f_movement_unlocker_enable	0``` - keep this 0 if you are using ServerMovementUnlocker standalone, if not, set to 1
+
+```cs2f_use_old_push 				    0``` - set this to 1 for maps with broken trigger_push
 
 ## Compilation
 
@@ -22,7 +25,7 @@ Follow the instructions below to compile CS2Fixes.
 
 ```bash
 
-git clone https://github.com/Interesting-exe/CS2Fixes-RampbugFix && cd CS2Fixes-RampbugFix
+git clone https://github.com/SharpTimer/STFixes-metamod && cd STFixes-metamod
 git submodule update --init --recursive
 
 export MMSOURCE112=/path/to/metamod/
