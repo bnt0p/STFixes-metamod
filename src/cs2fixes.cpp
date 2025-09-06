@@ -276,6 +276,7 @@ void CS2Fixes::Hook_StartupServer(const GameSessionConfiguration_t& config, ISou
 {
 	g_pNetworkGameServer = g_pNetworkServerService->GetIGameServer();
 	g_pEntitySystem = GameEntitySystem();
+	g_pEntitySystem->AddListenerEntity(g_pEntityListener)
 	gpGlobals = g_pEngineServer2->GetServerGlobals();
 }
 
