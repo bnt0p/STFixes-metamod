@@ -41,7 +41,6 @@ class CCSPlayerPawnBase : public CBasePlayerPawn
 {
 public:
 	DECLARE_SCHEMA_CLASS(CCSPlayerPawnBase);
-	SCHEMA_FIELD(QAngle, m_angEyeAngles)
 	SCHEMA_FIELD(CSPlayerState, m_iPlayerState)
 	SCHEMA_FIELD(CHandle<CCSPlayerController>, m_hOriginalController)
 
@@ -52,7 +51,7 @@ class CCSPlayerPawn : public CCSPlayerPawnBase
 {
 public:
 	DECLARE_SCHEMA_CLASS(CCSPlayerPawn);
-
 	SCHEMA_FIELD(float, m_flVelocityModifier)
 	SCHEMA_FIELD(CCSPlayer_ActionTrackingServices*, m_pActionTrackingServices)
+	SCHEMA_FIELD(QAngle, m_angEyeAngles)
 };
