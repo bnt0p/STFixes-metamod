@@ -31,7 +31,6 @@
 #include "patches.h"
 #include "plat.h"
 #include "entitysystem.h"
-#include "engine/igameeventsystem.h"
 #include "playermanager.h"
 #include "gameconfig.h"
 #include "entity/cgamerules.h"
@@ -83,7 +82,6 @@ SH_DECL_MANUALHOOK1_void(CTriggerGravityEndTouch, 0, 0, 0, CBaseEntity*);
 
 CS2Fixes g_CS2Fixes;
 
-IGameEventSystem *g_gameEventSystem = nullptr;
 INetworkGameServer *g_pNetworkGameServer = nullptr;
 CGameEntitySystem *g_pEntitySystem = nullptr;
 CGlobalVars *gpGlobals = nullptr;
@@ -119,7 +117,6 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 	GET_V_IFACE_ANY(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 	GET_V_IFACE_ANY(GetServerFactory, g_pSource2GameClients, IServerGameClients, SOURCE2GAMECLIENTS_INTERFACE_VERSION);
 	GET_V_IFACE_ANY(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
-	GET_V_IFACE_ANY(GetEngineFactory, g_gameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
 	GET_V_IFACE_ANY(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
 	GET_V_IFACE_ANY(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
 
@@ -276,7 +273,6 @@ void CS2Fixes::Hook_StartupServer(const GameSessionConfiguration_t& config, ISou
 {
 	g_pNetworkGameServer = g_pNetworkServerService->GetIGameServer();
 	g_pEntitySystem = GameEntitySystem();
-	g_pEntitySystem->AddListenerEntity(g_pEntityListener)
 	gpGlobals = g_pEngineServer2->GetServerGlobals();
 }
 
