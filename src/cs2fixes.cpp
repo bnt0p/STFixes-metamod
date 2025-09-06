@@ -78,7 +78,6 @@ class GameSessionConfiguration_t { };
 
 SH_DECL_HOOK4_void(IServerGameClients, ClientActive, SH_NOATTRIB, 0, CPlayerSlot, bool, const char *, uint64);
 SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
-SH_DECL_MANUALHOOK1_void(CGamePlayerEquipPrecache, 0, 0, 0, CEntityPrecacheContext*);
 SH_DECL_MANUALHOOK1_void(CTriggerGravityPrecache, 0, 0, 0, CEntityPrecacheContext*);
 SH_DECL_MANUALHOOK1_void(CTriggerGravityEndTouch, 0, 0, 0, CBaseEntity*);
 
@@ -92,7 +91,6 @@ CPlayerManager *g_playerManager = nullptr;
 IVEngineServer2 *g_pEngineServer2 = nullptr;
 CGameConfig *g_GameConfig = nullptr;
 CCSGameRules *g_pGameRules = nullptr;
-int g_iCGamePlayerEquipUseId = -1;
 int g_iCTriggerGravityPrecacheId = -1;
 int g_iCTriggerGravityEndTouchId = -1;
 
@@ -236,9 +234,6 @@ bool CS2Fixes::Unload(char *error, size_t maxlen)
 
 	if (g_GameConfig)
 		delete g_GameConfig;
-
-	if (g_iCGamePlayerEquipUseId != -1)
-		SH_REMOVE_HOOK_ID(g_iCGamePlayerEquipUseId);
 
 	return true;
 }
