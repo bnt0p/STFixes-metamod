@@ -217,6 +217,21 @@
 				"windows"		"4"
 				"linux"			"5"
 			}
+			"CBaseEntity::StartTouch"
+			{
+				"windows"		"150"
+				"linux"			"149"
+			}
+			"CBaseEntity::Touch"
+			{
+				"windows"		"151"
+				"linux"			"150"
+			}
+			"CBaseEntity::EndTouch"
+			{
+				"windows"		"152"
+				"linux"			"151"
+			}
 			"Teleport"
 			{
 				"windows"		"165"

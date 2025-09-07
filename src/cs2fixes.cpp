@@ -82,7 +82,6 @@ SH_DECL_MANUALHOOK1_void(CTriggerGravityEndTouch, 0, 0, 0, CBaseEntity*);
 
 CS2Fixes g_CS2Fixes;
 
-INetworkGameServer *g_pNetworkGameServer = nullptr;
 CGameEntitySystem *g_pEntitySystem = nullptr;
 CGlobalVars *gpGlobals = nullptr;
 CPlayerManager *g_playerManager = nullptr;
@@ -96,6 +95,12 @@ CGameEntitySystem *GameEntitySystem()
 {
 	static int offset = g_GameConfig->GetOffset("GameEntitySystem");
 	return *reinterpret_cast<CGameEntitySystem **>((uintptr_t)(g_pGameResourceServiceServer) + offset);
+}
+
+// Will return null between map end & new map startup, null check if necessary!
+INetworkGameServer* GetNetworkGameServer()
+{
+	return g_pNetworkServerService->GetIGameServer();
 }
 
 CGlobalVars* GetGlobals()
@@ -198,19 +203,19 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 
 	ConVar_Register();
 
-	if (late)
-	{
-		g_pEntitySystem = GameEntitySystem();
-		g_pNetworkGameServer = g_pNetworkServerService->GetIGameServer();
-		gpGlobals = g_pEngineServer2->GetServerGlobals();
-	}
-
-	g_playerManager = new CPlayerManager(late);
+	g_playerManager = new CPlayerManager();
 
 	// run our cfg
 	g_pEngineServer2->ServerCommand("exec stfixes-metamod/cs2fixes");
 
 	srand(time(0));
+
+	if (late)
+	{
+		g_pEntitySystem = GameEntitySystem();
+		gpGlobals = g_pEngineServer2->GetServerGlobals();
+	}
+
 
 	return true;
 }
@@ -225,6 +230,7 @@ bool CS2Fixes::Unload(char *error, size_t maxlen)
 	ConVar_Unregister();
 
 	FlushAllDetours();
+	UndoPatches();
 
 	if (g_playerManager)
 		delete g_playerManager;
@@ -244,13 +250,13 @@ void CS2Fixes::AllPluginsLoaded()
 	Message( "AllPluginsLoaded\n" );
 }
 
-CUtlVector<CServerSideClient *> *GetClientList()
+CUtlVector<CServerSideClient*>* GetClientList()
 {
-	if (!g_pNetworkGameServer)
+	if (!GetNetworkGameServer())
 		return nullptr;
 
 	static int offset = g_GameConfig->GetOffset("CNetworkGameServer_ClientList");
-	return (CUtlVector<CServerSideClient *> *)(&g_pNetworkGameServer[offset]);
+	return (CUtlVector<CServerSideClient*>*)(&GetNetworkGameServer()[offset]);
 }
 
 CServerSideClient *GetClientBySlot(CPlayerSlot slot)
@@ -271,7 +277,6 @@ void CS2Fixes::Hook_ClientActive( CPlayerSlot slot, bool bLoadGame, const char *
 
 void CS2Fixes::Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession *pSession, const char *pszMapName)
 {
-	g_pNetworkGameServer = g_pNetworkServerService->GetIGameServer();
 	g_pEntitySystem = GameEntitySystem();
 	gpGlobals = g_pEngineServer2->GetServerGlobals();
 }
@@ -305,6 +310,8 @@ void CS2Fixes::OnLevelInit(char const* pMapName,
 	char cmd[MAX_PATH];
 	V_snprintf(cmd, sizeof(cmd), "exec stfixes-metamod/maps/%s", pMapName);
 	g_pEngineServer2->ServerCommand(cmd);
+
+	EntityHandler_OnLevelInit();
 }
 
 bool CS2Fixes::Pause(char *error, size_t maxlen)

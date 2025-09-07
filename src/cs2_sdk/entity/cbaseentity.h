@@ -118,7 +118,7 @@ class CBaseEntity : public CEntityInstance
 public:
 	DECLARE_SCHEMA_CLASS(CBaseEntity)
 
-	SCHEMA_FIELD(CBodyComponent *, m_CBodyComponent)
+	SCHEMA_FIELD(CBodyComponent*, m_CBodyComponent)
 	SCHEMA_FIELD(CBitVec<64>, m_isSteadyState)
 	SCHEMA_FIELD(float, m_lastNetworkChange)
 	SCHEMA_FIELD_POINTER(CNetworkTransmitComponent, m_NetworkTransmitComponent)
@@ -139,8 +139,6 @@ public:
 	SCHEMA_FIELD(float, m_flDamageAccumulator)
 	SCHEMA_FIELD(bool, m_bTakesDamage)
 	SCHEMA_FIELD_POINTER(CUtlStringToken, m_nSubclassID)
-	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hGroundEntity)
-	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOwnerEntity)
 	SCHEMA_FIELD(float, m_flFriction)
 	SCHEMA_FIELD(float, m_flGravityScale)
 	SCHEMA_FIELD(float, m_flTimeScale)
@@ -148,6 +146,7 @@ public:
 	SCHEMA_FIELD(CUtlString, m_sUniqueHammerID);
 	SCHEMA_FIELD(CUtlSymbolLarge, m_target);
 	SCHEMA_FIELD(CUtlSymbolLarge, m_iGlobalname);
+	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOwnerEntity)
 
 	int entindex() { return m_pEntity->m_EHandle.GetEntryIndex(); }
 

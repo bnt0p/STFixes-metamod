@@ -52,7 +52,6 @@ class IEntityFindFilter;
 class CGameRules;
 class CEntityKeyValues;
 class IRecipientFilter;
-class CNetworkStateChangedInfo;
 struct bbox_t;
 
 struct SndOpEventGuid_t;
@@ -64,5 +63,4 @@ namespace addresses
 	inline void(FASTCALL* SetGroundEntity)(CBaseEntity* ent, CBaseEntity* ground, CBaseEntity* unk3);
 	inline void(FASTCALL* SetGravityScale)(CBaseEntity*, float);
 	inline void(FASTCALL* CBasePlayerController_SetPawn)(CBasePlayerController* pController, CCSPlayerPawn* pPawn, bool a3, bool a4, bool a5, bool a6);
-	inline void(FASTCALL* NetworkStateChanged)(void* chainEntity, CNetworkStateChangedInfo& info);
 }
