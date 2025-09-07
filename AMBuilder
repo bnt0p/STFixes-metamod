@@ -58,6 +58,7 @@ for sdk_target in MMSPlugin.sdk_targets:
     'src/addresses.cpp',
     'src/detours.cpp',
     'src/entities.cpp',
+    'src/entitylistener.cpp',
     'src/utils/entity.cpp',
     'src/cs2_sdk/schema.cpp',
     'src/playermanager.cpp',

@@ -18,17 +18,14 @@
  */
 
 #pragma once
+#include "entitysystem.h"
 
-class CBaseEntity;
-class CCSPlayerPawn;
-class CEntityKeyValues;
-
-namespace CTriggerGravityHandler
+class CEntityListener : public IEntityListener
 {
-	void OnPrecache(CBaseEntity* pEntity, const CEntityKeyValues* kv);
-	bool GravityTouching(CBaseEntity* pEntity, CBaseEntity* pOther);
-	void OnEndTouch(CBaseEntity* pEntity, CBaseEntity* pOther);
-} // namespace CTriggerGravityHandler
+	void OnEntitySpawned(CEntityInstance* pEntity) override;
+	void OnEntityCreated(CEntityInstance* pEntity) override;
+	void OnEntityDeleted(CEntityInstance* pEntity) override;
+	void OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent) override;
+};
 
-void EntityHandler_OnEntitySpawned(CBaseEntity* pEntity);
-void EntityHandler_OnLevelInit();
+extern CEntityListener* g_pEntityListener;

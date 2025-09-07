@@ -24,6 +24,7 @@
 #include "common.h"
 #include "detours.h"
 #include "entities.h"
+#include "entitylistener.h"
 #include "icvar.h"
 #include "interface.h"
 #include "tier0/dbg.h"
@@ -82,7 +83,7 @@ SH_DECL_MANUALHOOK1_void(CTriggerGravityEndTouch, 0, 0, 0, CBaseEntity*);
 
 CS2Fixes g_CS2Fixes;
 
-CGameEntitySystem *g_pEntitySystem = nullptr;
+CGameEntitySystem* g_pEntitySystem = nullptr;
 CGlobalVars *gpGlobals = nullptr;
 CPlayerManager *g_playerManager = nullptr;
 IVEngineServer2 *g_pEngineServer2 = nullptr;
@@ -91,10 +92,10 @@ CCSGameRules *g_pGameRules = nullptr;
 int g_iCTriggerGravityPrecacheId = -1;
 int g_iCTriggerGravityEndTouchId = -1;
 
-CGameEntitySystem *GameEntitySystem()
+CGameEntitySystem* GameEntitySystem()
 {
 	static int offset = g_GameConfig->GetOffset("GameEntitySystem");
-	return *reinterpret_cast<CGameEntitySystem **>((uintptr_t)(g_pGameResourceServiceServer) + offset);
+	return *reinterpret_cast<CGameEntitySystem**>((uintptr_t)(g_pGameResourceServiceServer) + offset);
 }
 
 // Will return null between map end & new map startup, null check if necessary!
@@ -204,6 +205,7 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 	ConVar_Register();
 
 	g_playerManager = new CPlayerManager();
+	g_pEntityListener = new CEntityListener();
 
 	// run our cfg
 	g_pEngineServer2->ServerCommand("exec stfixes-metamod/cs2fixes");
@@ -213,6 +215,7 @@ bool CS2Fixes::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool
 	if (late)
 	{
 		g_pEntitySystem = GameEntitySystem();
+		g_pEntitySystem->AddListenerEntity(g_pEntityListener);
 		gpGlobals = g_pEngineServer2->GetServerGlobals();
 	}
 
@@ -237,6 +240,12 @@ bool CS2Fixes::Unload(char *error, size_t maxlen)
 
 	if (g_GameConfig)
 		delete g_GameConfig;
+
+	if (g_pEntityListener)
+	{
+		g_pEntitySystem->RemoveListenerEntity(g_pEntityListener);
+		delete g_pEntityListener;
+	}
 
 	return true;
 }
@@ -278,6 +287,7 @@ void CS2Fixes::Hook_ClientActive( CPlayerSlot slot, bool bLoadGame, const char *
 void CS2Fixes::Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession *pSession, const char *pszMapName)
 {
 	g_pEntitySystem = GameEntitySystem();
+	g_pEntitySystem->AddListenerEntity(g_pEntityListener);
 	gpGlobals = g_pEngineServer2->GetServerGlobals();
 }
 

@@ -84,6 +84,10 @@ namespace CTriggerGravityHandler
 	}
 } // namespace CTriggerGravityHandler
 
+void EntityHandler_OnEntitySpawned(CBaseEntity* pEntity)
+{
+}
+
 void EntityHandler_OnLevelInit()
 {
 	CTriggerGravityHandler::Shutdown();
