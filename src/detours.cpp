@@ -51,6 +51,7 @@ CUtlVector<CDetourBase *> g_vecDetours;
 
 DECLARE_DETOUR(TriggerPush_Touch, Detour_TriggerPush_Touch);
 DECLARE_DETOUR(CTriggerGravity_GravityTouch, Detour_CTriggerGravity_GravityTouch);
+DECLARE_DETOUR(ProcessUsercmds, Detour_ProcessUsercmds);
 
 #define f32 float32
 #define i32 int32_t
@@ -143,6 +144,50 @@ void FASTCALL Detour_CTriggerGravity_GravityTouch(CBaseEntity* pEntity, CBaseEnt
 
 	CTriggerGravity_GravityTouch(pEntity, pOther);
 }
+
+CConVar<bool> g_cvarDisableSubtickMovement("cs2f_disable_subtick_move", FCVAR_NONE, "Whether to disable subtick movement", false);
+
+class CUserCmd
+{
+public:
+	[[maybe_unused]] char pad0[0x10];
+	CSGOUserCmdPB cmd;
+	[[maybe_unused]] char pad1[0x38];
+#ifdef PLATFORM_WINDOWS
+	[[maybe_unused]] char pad2[0x8];
+#endif
+};
+
+void* FASTCALL Detour_ProcessUsercmds(CCSPlayerController* pController, CUserCmd* cmds, int numcmds, bool paused, float margin)
+{
+	VPROF_SCOPE_BEGIN("Detour_ProcessUsercmds");
+
+	for (int i = 0; i < numcmds; i++)
+	{
+		// Push fix only works properly if subtick movement is also disabled
+		if (g_cvarDisableSubtickMovement.Get() || g_cvarUseOldPush.Get())
+		{
+			auto subtickMoves = cmds[i].cmd.mutable_base()->mutable_subtick_moves();
+			auto iterator = subtickMoves->begin();
+
+			while (iterator != subtickMoves->end())
+			{
+				uint64 button = iterator->button();
+
+				// Remove normal subtick movement inputs by button & subtick movement viewangles by pitch/yaw
+				if ((button >= IN_JUMP && button <= IN_MOVERIGHT && button != IN_USE) || iterator->analog_pitch_delta() != 0.0f || iterator->analog_yaw_delta() != 0.0f)
+					subtickMoves->erase(iterator);
+				else
+					iterator++;
+			}
+		}
+	}
+
+	VPROF_SCOPE_END();
+
+	return ProcessUsercmds(pController, cmds, numcmds, paused, margin);
+}
+
 
 bool InitDetours(CGameConfig *gameConfig)
 {
