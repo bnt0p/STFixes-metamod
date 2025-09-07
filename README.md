@@ -1,5 +1,5 @@
 # STFixes-metamod
-A stripped down build of CS2Fixes with only surf/bhop related fixes (movement unlocker, botnavignore, water floor jump fix, trigger_push fix, trigger_gravity fix)
+A stripped down build of CS2Fixes with only surf/bhop related fixes (disable subtick movement (speed gain fix), movement unlocker, botnavignore, water floor jump fix, trigger_push fix, trigger_gravity fix)
 
 ## Installation
 
@@ -11,6 +11,8 @@ A stripped down build of CS2Fixes with only surf/bhop related fixes (movement un
 ```cs2f_movement_unlocker_enable	0``` - keep this 0 if you are using ServerMovementUnlocker standalone, if not, set to 1
 
 ```cs2f_use_old_push 				    0``` - set this to 1 for maps with broken trigger_push
+
+```cs2f_disable_subtick_move     1``` - set to 1 by default due to fixing speed gain exploit
 
 ## Compilation
 
