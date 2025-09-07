@@ -12,8 +12,6 @@ A stripped down build of CS2Fixes with only surf/bhop related fixes (disable sub
 
 ```cs2f_use_old_push 				    0``` - set this to 1 for maps with broken trigger_push
 
-```cs2f_disable_subtick_move     1``` - set to 1 by default due to fixing speed gain exploit
-
 ## Compilation
 
 ### Requirements
