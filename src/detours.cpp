@@ -145,8 +145,6 @@ void FASTCALL Detour_CTriggerGravity_GravityTouch(CBaseEntity* pEntity, CBaseEnt
 	CTriggerGravity_GravityTouch(pEntity, pOther);
 }
 
-CConVar<bool> g_cvarDisableSubtickMovement("cs2f_disable_subtick_move", FCVAR_NONE, "Whether to disable subtick movement", false);
-
 class CUserCmd
 {
 public:
@@ -164,22 +162,18 @@ void* FASTCALL Detour_ProcessUsercmds(CCSPlayerController* pController, CUserCmd
 
 	for (int i = 0; i < numcmds; i++)
 	{
-		// Push fix only works properly if subtick movement is also disabled
-		if (g_cvarDisableSubtickMovement.Get() || g_cvarUseOldPush.Get())
+		auto subtickMoves = cmds[i].cmd.mutable_base()->mutable_subtick_moves();
+		auto iterator = subtickMoves->begin();
+
+		while (iterator != subtickMoves->end())
 		{
-			auto subtickMoves = cmds[i].cmd.mutable_base()->mutable_subtick_moves();
-			auto iterator = subtickMoves->begin();
+			uint64 button = iterator->button();
 
-			while (iterator != subtickMoves->end())
-			{
-				uint64 button = iterator->button();
-
-				// Remove normal subtick movement inputs by button & subtick movement viewangles by pitch/yaw
-				if ((button >= IN_JUMP && button <= IN_MOVERIGHT && button != IN_USE) || iterator->analog_pitch_delta() != 0.0f || iterator->analog_yaw_delta() != 0.0f)
-					subtickMoves->erase(iterator);
-				else
-					iterator++;
-			}
+			// Remove normal subtick movement inputs by button & subtick movement viewangles by pitch/yaw
+			if ((button >= IN_JUMP && button <= IN_MOVERIGHT && button != IN_USE) || iterator->analog_pitch_delta() != 0.0f || iterator->analog_yaw_delta() != 0.0f)
+				subtickMoves->erase(iterator);
+			else
+				iterator++;
 		}
 	}
 
